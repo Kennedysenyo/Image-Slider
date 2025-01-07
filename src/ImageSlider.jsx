@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {BsArrowLeftCircleFill, BsArrowRightCircleFill} from "react-icons/bs"
 
-const ImageSlider = ({ url, page = 1,  limit = 5}) => {
+const ImageSlider = ({ url = "https://picsum.photos/v2/list", page = 1,  limit = 5}) => {
  
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -38,9 +38,9 @@ const ImageSlider = ({ url, page = 1,  limit = 5}) => {
 
   console.log(images)
 
-  if (loading) {
-    return <div>Loading data! Please wait</div>
-  }
+  // if (loading) {
+  //   return <div>Loading data! Please wait</div>
+  // }
 
   if (errorMsg !== null) {
     return <div>Error occured! {errorMsg}</div>
@@ -51,17 +51,19 @@ const ImageSlider = ({ url, page = 1,  limit = 5}) => {
   <div className="container">
     <BsArrowLeftCircleFill onClick={handlePrevious} className="arrow arrow-left"/>
     {
-      images && images.length ?
-      images.map((imageItem, index) => (
-        <img 
-          key={imageItem.id}
-          src={imageItem.download_url}  
-          alt={imageItem.download_url}
-          className={currentSlide === index ? "current-image" : "current-image hide-current-image"}
-        />
-      ))
-      :null
-    }
+      loading ? <div className="image-placeholder">Loading Image...</div> : 
+        images && images.length ?
+        images.map((imageItem, index) => (
+          <img 
+            key={imageItem.id}
+            src={imageItem.download_url}  
+            alt={imageItem.download_url}
+            className={currentSlide === index ? "current-image" : "current-image hide-current-image"}
+          />
+        ))
+        :null
+      }
+    
     <BsArrowRightCircleFill onClick={handleNext} className="arrow arrow-right" />
 
     <span className="circle-indicators">
