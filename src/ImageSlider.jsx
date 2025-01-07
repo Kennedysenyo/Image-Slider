@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {BsArrowLeftCircleFill, BsArrowRightCircleFill} from "react-icons/bs"
 
+
 const ImageSlider = ({ url = "https://picsum.photos/v2/list", page = 1,  limit = 5}) => {
  
   const [images, setImages] = useState([]);
@@ -37,6 +38,15 @@ const ImageSlider = ({ url = "https://picsum.photos/v2/list", page = 1,  limit =
   useEffect(() => {
     if(url !== "") fetchImages(url)
   } , [url])
+
+
+  // Add autoplay to looping images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext()
+    }, 3000);
+    return () => clearInterval(interval)
+  }, [currentSlide]);
 
  
   if (errorMsg !== null) {
