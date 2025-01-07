@@ -14,9 +14,11 @@ const ImageSlider = ({ url = "https://picsum.photos/v2/list", page = 1,  limit =
       const response = await fetch(`${getUrl}?page=${page}&limit=${limit}`);
       const data = await response.json()
 
-      if (data) {
-        setImages(data)
+      if (Array.isArray(data)) {
+        setImages(data.filter(dataItem => dataItem.download_url))
         setLoading(false)
+      }else {
+        setErrorMsg("Invalid data format");
       }
     }catch (error) {
       setErrorMsg(error.message);
@@ -36,12 +38,7 @@ const ImageSlider = ({ url = "https://picsum.photos/v2/list", page = 1,  limit =
     if(url !== "") fetchImages(url)
   } , [url])
 
-  console.log(images)
-
-  // if (loading) {
-  //   return <div>Loading data! Please wait</div>
-  // }
-
+ 
   if (errorMsg !== null) {
     return <div>Error occured! {errorMsg}</div>
   }
@@ -49,7 +46,11 @@ const ImageSlider = ({ url = "https://picsum.photos/v2/list", page = 1,  limit =
 
  return (
   <div className="container">
-    <BsArrowLeftCircleFill onClick={handlePrevious} className="arrow arrow-left"/>
+    <BsArrowLeftCircleFill 
+      onClick={handlePrevious} 
+      className="arrow arrow-left"
+      aria-label="Previous Slide"
+    />
     {
       loading ? <div className="image-placeholder">Loading Image...</div> : 
         images && images.length ?
@@ -64,7 +65,11 @@ const ImageSlider = ({ url = "https://picsum.photos/v2/list", page = 1,  limit =
         :null
       }
     
-    <BsArrowRightCircleFill onClick={handleNext} className="arrow arrow-right" />
+    <BsArrowRightCircleFill 
+      onClick={handleNext} 
+      className="arrow arrow-right" 
+      aria-label="Next Slide"
+    />
 
     <span className="circle-indicators">
       {
